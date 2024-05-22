@@ -5,6 +5,8 @@ import signinUserDto from "../dtos/signinUser_DTO";
 import bcrypt from "bcryptjs";
 import CONFIG from "../config/server_config";
 import { generateJWT } from "../utils/auth";
+import NotFoundError from "../errors/notFound";
+import UnauthorisedError from "../errors/unauthorisedError";
 
 class UserService {
   userRepository: UserRepository;
@@ -52,7 +54,7 @@ class UserService {
     try {
       const response = await this.userRepository.signinUser(userDetails);
       if (!response) {
-        throw { error: "User not found" };
+        throw new NotFoundError("User", "email", userDetails.email);
       }
       const isPasswordValid = bcrypt.compareSync(
         userDetails.password,
@@ -60,7 +62,7 @@ class UserService {
       );
 
       if (!isPasswordValid) {
-        throw { error: "Invalid password" };
+        throw new UnauthorisedError();
       }
 
       const token: string = generateJWT({

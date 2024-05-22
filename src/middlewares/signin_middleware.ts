@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import SigninUserDto from "../dtos/signinUser_DTO";
 import { validate } from "class-validator";
+import BadRequestError from "../errors/badRequest";
+import { StatusCodes } from "http-status-codes";
 
 export async function signInValidator(
   req: Request,
@@ -19,8 +21,8 @@ export async function signInValidator(
         constraints: err.constraints,
       };
     });
-    return res.status(400).json({
-      err: errorResponse,
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      err: new BadRequestError(errorResponse),
       data: {},
       success: false,
       message: "Invalid parameters sent in the request",
