@@ -2,4 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const { PORT } = process.env;
+export default {
+  PORT: process.env.PORT || 3000,
+  SALT: process.env.SALT == undefined ? 10 : +process.env.SALT,
+};
