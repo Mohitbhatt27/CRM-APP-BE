@@ -12,7 +12,6 @@ class UserRepository {
         password: userDetails.password,
       },
     });
-
     return response;
   }
 

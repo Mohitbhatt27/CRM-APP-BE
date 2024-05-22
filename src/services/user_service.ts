@@ -12,13 +12,12 @@ class UserService {
   async getUserById(id: string): Promise<User | null> {
     try {
       const response: User | null = await this.userRepository.getUserById(id);
-
       if (!response) {
         throw { error: "User not found" };
       }
-
       return response;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -28,6 +27,7 @@ class UserService {
       const response: User[] = await this.userRepository.getAllUsers();
       return response;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -35,11 +35,9 @@ class UserService {
   async createUser(userDetails: createUserDto): Promise<User> {
     try {
       const response: User = await this.userRepository.createUser(userDetails);
-      if (!response) {
-        throw { error: "user not created" };
-      }
       return response;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
