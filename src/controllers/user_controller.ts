@@ -44,7 +44,28 @@ async function getAllUsers(req: Request, res: Response) {
   }
 }
 
+async function createUser(req: Request, res: Response) {
+  try {
+    const { name, email, password } = req.body;
+    const response = await userService.createUser({ name, email, password });
+    res.status(201).json({
+      data: response,
+      success: true,
+      message: "User created successfully",
+      error: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      data: {},
+      success: false,
+      message: "Internal server error",
+      error: "Internal server error",
+    });
+  }
+}
+
 export default {
   getUserById,
   getAllUsers,
+  createUser,
 };

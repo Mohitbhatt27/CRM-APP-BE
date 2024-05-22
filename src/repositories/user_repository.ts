@@ -1,19 +1,20 @@
 import { PrismaClient, User } from "@prisma/client";
+import createUserDto from "../dtos/createUser_DTO";
 
 const prisma = new PrismaClient();
 
 class UserRepository {
-  // async createUser(name, email, password): Promise<User> {
-  //   const response: User = await prisma.user.create({
-  //     data: {
-  //       name,
-  //       email,
-  //       password,
-  //     },
-  //   });
+  async createUser(userDetails: createUserDto): Promise<User> {
+    const response: User = await prisma.user.create({
+      data: {
+        name: userDetails.name,
+        email: userDetails.email,
+        password: userDetails.password,
+      },
+    });
 
-  //   return response;
-  // }
+    return response;
+  }
 
   async getUserById(id: string): Promise<User | null> {
     const response: User | null = await prisma.user.findUnique({

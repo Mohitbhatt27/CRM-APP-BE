@@ -1,5 +1,7 @@
 import { User } from "@prisma/client";
 import UserRepository from "../repositories/user_repository";
+import createUserDto from "../dtos/createUser_DTO";
+import { error } from "console";
 
 class UserService {
   userRepository: UserRepository;
@@ -24,6 +26,18 @@ class UserService {
   async getAllUsers(): Promise<User[]> {
     try {
       const response: User[] = await this.userRepository.getAllUsers();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createUser(userDetails: createUserDto): Promise<User> {
+    try {
+      const response: User = await this.userRepository.createUser(userDetails);
+      if (!response) {
+        throw { error: "user not created" };
+      }
       return response;
     } catch (error) {
       throw error;
