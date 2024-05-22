@@ -1,8 +1,10 @@
 import { User } from "@prisma/client";
 import UserRepository from "../repositories/user_repository";
 import createUserDto from "../dtos/createUser_DTO";
+import signinUserDto from "../dtos/signinUser_DTO";
 import bcrypt from "bcryptjs";
 import CONFIG from "../config/server_config";
+import { generateJWT } from "../utils/auth";
 
 class UserService {
   userRepository: UserRepository;
@@ -40,6 +42,33 @@ class UserService {
 
       const response: User = await this.userRepository.createUser(userDetails);
       return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async signinUser(userDetails: signinUserDto): Promise<string | null> {
+    try {
+      const response = await this.userRepository.signinUser(userDetails);
+      if (!response) {
+        throw { error: "User not found" };
+      }
+      const isPasswordValid = bcrypt.compareSync(
+        userDetails.password,
+        response.password
+      );
+
+      if (!isPasswordValid) {
+        throw { error: "Invalid password" };
+      }
+
+      const token: string = generateJWT({
+        id: response.id,
+        email: response.email,
+      });
+
+      return token;
     } catch (error) {
       console.log(error);
       throw error;

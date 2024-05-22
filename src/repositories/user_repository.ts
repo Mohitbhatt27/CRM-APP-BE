@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import createUserDto from "../dtos/createUser_DTO";
+import signinUserDto from "../dtos/signinUser_DTO";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,16 @@ class UserRepository {
         password: userDetails.password,
       },
     });
+    return response;
+  }
+
+  async signinUser(userDetails: signinUserDto): Promise<User | null> {
+    const response: User | null = await prisma.user.findUnique({
+      where: {
+        email: userDetails.email,
+      },
+    });
+
     return response;
   }
 

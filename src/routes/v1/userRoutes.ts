@@ -3,12 +3,14 @@ const userRouter = express.Router();
 import userController from "../../controllers/user_controller";
 import createUserMiddleware from "../../middlewares/user_middleware";
 
-const { getUserById, getAllUsers, createUser } = userController;
+const { getUserById, getAllUsers, createUser, signinUser } = userController;
 
 userRouter.get("/:id", getUserById);
 
 userRouter.get("/", getAllUsers);
 
-userRouter.post("/", createUserMiddleware, createUser);
+userRouter.post("/signup", createUserMiddleware, createUser);
+
+userRouter.post("/signin", signinUser);
 
 export default userRouter;

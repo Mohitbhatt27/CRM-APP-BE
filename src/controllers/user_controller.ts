@@ -80,8 +80,33 @@ async function createUser(req: Request, res: Response) {
   }
 }
 
+async function signinUser(req: Request, res: Response) {
+  try {
+    const response = await userService.signinUser(req.body);
+    return res.status(200).json({
+      message: "Successfully signed in the user",
+      data: response,
+      err: {},
+      success: true,
+    });
+  } catch (error) {
+    if (error instanceof GenericError) {
+      return res.status(error.statusCode).json({
+        message: "Something went wrong",
+        data: {},
+        err: error,
+        success: true,
+      });
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(unknownErrorResponse);
+  }
+}
+
 export default {
   getUserById,
   getAllUsers,
   createUser,
+  signinUser,
 };
