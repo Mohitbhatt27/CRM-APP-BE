@@ -1,32 +1,26 @@
-import express, { Express, Request, Response, Application } from "express";
+import express, { Request, Response, Application } from "express";
+import bodyParser from "body-parser";
 import cors from "cors";
-
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
 const app: Application = express();
+
 app.use(cors());
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 import { PORT } from "./config/server_config";
-import { log } from "console";
+import apiRouter from "./routes";
 
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.text());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-app.listen(PORT, async () => {
-  console.log("Server started on port 3000");
-  const user = await prisma.user.create({
-    data: {
-      name: "John Doe",
-      email: "X9Xp7@example.com",
-      password: "123456",
-    },
-  });
+app.use("/api", apiRouter);
 
-  console.log(user);
+app.listen(PORT, async () => {
+  console.log(`Server started on port ${PORT}`);
 });
