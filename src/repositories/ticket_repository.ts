@@ -6,14 +6,9 @@ const prisma = new PrismaClient();
 
 class TicketRepository {
   async createTicket(ticketDetails: createTicketDto): Promise<Ticket> {
-    const response: Ticket = await prisma.ticket.create({
+    const response = await prisma.ticket.create({
       data: {
-        title: ticketDetails.title,
-        description: ticketDetails.description,
-        assignee: ticketDetails.assignee,
-        assignedTo: ticketDetails.assignedTo,
-        createdBy: ticketDetails.createdBy,
-        clientName: ticketDetails.clientName,
+        ...ticketDetails,
       },
     });
     return response;

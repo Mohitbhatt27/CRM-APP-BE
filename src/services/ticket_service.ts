@@ -2,6 +2,7 @@ import { Ticket } from "@prisma/client";
 import TicketRepository from "../repositories/ticket_repository";
 import createTicketDto from "../dtos/createTicket_DTO";
 import UserRepository from "../repositories/user_repository";
+import NotFoundError from "../errors/notFound";
 
 class UserService {
   ticketRepository: TicketRepository;
@@ -14,40 +15,27 @@ class UserService {
     this.ticketRepository = ticketRepository;
     this.userRepository = userRepository;
   }
-  // async getUserById(id: string): Promise<User | null> {
-  //   try {
-  //     const response: User | null = await this.userRepository.getUserById(id);
-  //     if (!response) {
-  //       throw { error: "User not found" };
-  //     }
-  //     return response;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // }
-
-  // async getAllUsers(): Promise<User[]> {
-  //   try {
-  //     const response: User[] = await this.userRepository.getAllUsers();
-  //     return response;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // }
-
-  //   async getEngineerToAllocateTicket() {
-  //     try {
-  //         const engineer = await this.userRepository.getAvailableEngineer();
-  //         return engineer;
-  //     } catch(error) {
-  //         console.log(error);
-  //         throw error;
-  //     }
-  // }
-  async createTicket(ticketDetails: createTicketDto): Promise<Ticket> {
+  async createTicket(
+    ticketDetails: createTicketDto,
+    id: string
+  ): Promise<Ticket> {
     try {
+      const createdBy = await this.userRepository.getUserById(id);
+      if (!createdBy) {
+        throw new NotFoundError("User", "id", id);
+      }
+      const engineersToAllocate = (
+        await this.getEngineerToAllocateTicket()
+      ).filter((engineer) => engineer.id !== createdBy.id);
+      const randomIndex = Math.floor(
+        Math.random() * engineersToAllocate.length
+      );
+      const engineer = engineersToAllocate[randomIndex];
+
+      ticketDetails.assignee = createdBy.email;
+      ticketDetails.assignedTo = engineer.email;
+      ticketDetails.createdBy = createdBy.email;
+
       const response: Ticket = await this.ticketRepository.createTicket(
         ticketDetails
       );
@@ -58,33 +46,15 @@ class UserService {
     }
   }
 
-  // async signinUser(userDetails: signinUserDto): Promise<string | null> {
-  //   try {
-  //     const response = await this.userRepository.signinUser(userDetails);
-  //     if (!response) {
-  //       throw new NotFoundError("User", "email", userDetails.email);
-  //     }
-  //     const isPasswordValid = bcrypt.compareSync(
-  //       userDetails.password,
-  //       response.password
-  //     );
-
-  //     if (!isPasswordValid) {
-  //       throw new UnauthorisedError();
-  //     }
-
-  //     const token: string = generateJWT({
-  //       id: response.id,
-  //       email: response.email,
-  //       role: response.role,
-  //     });
-
-  //     return token;
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // }
+  async getEngineerToAllocateTicket() {
+    try {
+      const engineer = await this.userRepository.getAvailableEngineers();
+      return engineer;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 export default UserService;
