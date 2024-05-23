@@ -10,12 +10,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 import CONFIG from "./config/server_config";
 import apiRouter from "./routes";
+import { isLoggedIn } from "./middlewares/auth_middleware";
 
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", isLoggedIn, (req: Request, res: Response) => {
+  console.log(req.user);
   res.send("Hello World!");
 });
 

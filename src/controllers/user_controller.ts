@@ -104,9 +104,36 @@ async function signinUser(req: Request, res: Response) {
   }
 }
 
+async function updateUserRole(req: Request, res: Response) {
+  const id = req.params.id;
+  const role = req.body.role;
+  try {
+    const response = await userService.updateUserRole(id, role);
+    return res.status(200).json({
+      message: "Successfully updated the user role",
+      data: response,
+      err: {},
+      success: true,
+    });
+  } catch (error) {
+    if (error instanceof GenericError) {
+      return res.status(error.statusCode).json({
+        message: "Something went wrong",
+        data: {},
+        err: error,
+        success: true,
+      });
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(unknownErrorResponse);
+  }
+}
+
 export default {
   getUserById,
   getAllUsers,
   createUser,
   signinUser,
+  updateUserRole,
 };

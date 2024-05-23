@@ -31,7 +31,7 @@ export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
   try {
     const roles = req.user.role;
-    const isAdmin = roles.includes("ADMIN");
+    const isAdmin = roles === "ADMIN";
     if (isAdmin) {
       next();
     } else {
@@ -50,7 +50,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 export function isEngineer(req: Request, res: Response, next: NextFunction) {
   try {
     const roles = req.user.role;
-    if (roles.includes("ENGINEER")) {
+    if (roles === "ENGINEER") {
       next();
     } else {
       throw new UnauthorisedError();
@@ -72,7 +72,7 @@ export function isEngineerOrAdmin(
 ) {
   try {
     const roles = req.user.role;
-    if (roles.includes("ENGINEER") || roles.includes("ADMIN")) {
+    if (roles === "ENGINEER" || roles === "ADMIN") {
       next();
     } else {
       throw new UnauthorisedError();

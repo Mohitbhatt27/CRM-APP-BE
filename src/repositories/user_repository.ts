@@ -40,6 +40,27 @@ class UserRepository {
     const response: User[] = await prisma.user.findMany();
     return response;
   }
+
+  async updateUserRole(id: string, role: any): Promise<User | null> {
+    const response: User | null = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        role: role,
+      },
+    });
+    return response;
+  }
+
+  // async getAvailableEngineers(): Promise<User[]> {
+  //   const response: User[] = await prisma.user.findMany({
+  //     where: {
+  //       role: "engineer",
+  //     },
+  //   });
+  //   return response;
+  // }
 }
 
 export default UserRepository;

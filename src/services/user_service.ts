@@ -68,10 +68,23 @@ class UserService {
       const token: string = generateJWT({
         id: response.id,
         email: response.email,
-        role: response.roles,
+        role: response.role,
       });
 
       return token;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async updateUserRole(id: string, role: any): Promise<User | null> {
+    try {
+      const response: User | null = await this.userRepository.updateUserRole(
+        id,
+        role
+      );
+      return response;
     } catch (error) {
       console.log(error);
       throw error;
