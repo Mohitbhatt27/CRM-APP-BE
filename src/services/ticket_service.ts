@@ -3,8 +3,10 @@ import TicketRepository from "../repositories/ticket_repository";
 import createTicketDto from "../dtos/createTicket_DTO";
 import UserRepository from "../repositories/user_repository";
 import NotFoundError from "../errors/notFound";
+import UpdateTicketDto from "../dtos/updateTicket_DTO";
+import UnauthorisedError from "../errors/unauthorisedError";
 
-class UserService {
+class TicketService {
   ticketRepository: TicketRepository;
   userRepository: UserRepository;
 
@@ -46,6 +48,34 @@ class UserService {
     }
   }
 
+  async updateTicket(
+    role: string,
+    userEmail: string,
+    id: string,
+    ticketDetails: UpdateTicketDto
+  ): Promise<Ticket> {
+    try {
+      const ticket = await this.ticketRepository.getTicket(id);
+      if (!ticket) {
+        throw new NotFoundError("Ticket", "id", id);
+      }
+      if (ticket.assignedTo != userEmail && role != "ADMIN") {
+        console.log(ticket.assignedTo, userEmail, role);
+
+        throw new UnauthorisedError();
+      }
+
+      const response: Ticket = await this.ticketRepository.updateTicket(
+        id,
+        ticketDetails
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async getEngineerToAllocateTicket() {
     try {
       const engineer = await this.userRepository.getAvailableEngineers();
@@ -57,4 +87,4 @@ class UserService {
   }
 }
 
-export default UserService;
+export default TicketService;

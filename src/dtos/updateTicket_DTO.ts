@@ -20,6 +20,9 @@ class UpdateTicketDto {
   assignedTo?: string;
 
   @IsOptional()
+  ticketPriority?: number;
+
+  @IsOptional()
   @IsEmail()
   @IsString()
   createdBy?: string;

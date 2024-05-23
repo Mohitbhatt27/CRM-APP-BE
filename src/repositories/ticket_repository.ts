@@ -40,8 +40,8 @@ class TicketRepository {
   async updateTicket(
     id: string,
     ticketDetails: UpdateTicketDto
-  ): Promise<Ticket | null> {
-    const response: Ticket | null = await prisma.ticket.update({
+  ): Promise<Ticket> {
+    const response: Ticket = await prisma.ticket.update({
       where: {
         id,
       },

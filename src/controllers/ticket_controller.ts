@@ -35,6 +35,39 @@ async function createTicket(req: Request, res: Response) {
   }
 }
 
+async function updateTicket(req: Request, res: Response) {
+  try {
+    if (req.body.ticketPriority) {
+      req.body.ticketPriority = Number(req.body.ticketPriority);
+    }
+    const response = await ticketService.updateTicket(
+      req.user.role,
+      req.user.email,
+      req.params.id,
+      req.body
+    );
+    return res.status(200).json({
+      message: "Successfully updated the ticket",
+      data: response,
+      err: {},
+      success: true,
+    });
+  } catch (error) {
+    if (error instanceof GenericError) {
+      return res.status(error.statusCode).json({
+        message: "Something went wrong",
+        data: {},
+        err: error,
+        success: true,
+      });
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(unknownErrorResponse);
+  }
+}
+
 export default {
   createTicket,
+  updateTicket,
 };

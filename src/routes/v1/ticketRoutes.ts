@@ -1,10 +1,15 @@
 import express from "express";
 const ticketRouter = express.Router();
 import ticketController from "../../controllers/ticket_controller";
-import { isLoggedIn } from "../../middlewares/auth_middleware";
+import {
+  isEngineerOrAdmin,
+  isLoggedIn,
+} from "../../middlewares/auth_middleware";
 
-const { createTicket } = ticketController;
+const { createTicket, updateTicket } = ticketController;
 
 ticketRouter.post("/create", isLoggedIn, createTicket);
+
+ticketRouter.patch("/update/:id", isLoggedIn, isEngineerOrAdmin, updateTicket);
 
 export default ticketRouter;
