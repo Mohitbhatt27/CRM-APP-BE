@@ -1,8 +1,10 @@
 import express from "express";
 const userRouter = express.Router();
 import userController from "../../controllers/user_controller";
-import createUserMiddleware from "../../middlewares/user_middleware";
-import { signInValidator } from "../../middlewares/signin_middleware";
+import {
+  createUserMiddleware,
+  signInValidator,
+} from "../../middlewares/user_middleware";
 
 const { getUserById, getAllUsers, createUser, signinUser } = userController;
 

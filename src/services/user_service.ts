@@ -68,6 +68,7 @@ class UserService {
       const token: string = generateJWT({
         id: response.id,
         email: response.email,
+        role: response.roles,
       });
 
       return token;
