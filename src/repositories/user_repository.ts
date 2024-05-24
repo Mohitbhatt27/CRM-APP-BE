@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, Ticket, User } from "@prisma/client";
 import createUserDto from "../dtos/createUser_DTO";
 import signinUserDto from "../dtos/signinUser_DTO";
 

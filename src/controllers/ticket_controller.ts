@@ -67,7 +67,82 @@ async function updateTicket(req: Request, res: Response) {
   }
 }
 
+async function getMyAssignedTickets(req: Request, res: Response) {
+  try {
+    const response = await ticketService.getMyAssignedTickets(req.user.id);
+    return res.status(200).json({
+      message: "Successfully fetched the tickets",
+      data: response,
+      err: {},
+      success: true,
+    });
+  } catch (error) {
+    if (error instanceof GenericError) {
+      return res.status(error.statusCode).json({
+        message: "Something went wrong",
+        data: {},
+        err: error,
+        success: true,
+      });
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(unknownErrorResponse);
+  }
+}
+
+async function getMyCreatedTickets(req: Request, res: Response) {
+  try {
+    const response = await ticketService.getMyCreatedTickets(req.user.id);
+    return res.status(200).json({
+      message: "Successfully fetched the tickets",
+      data: response,
+      err: {},
+      success: true,
+    });
+  } catch (error) {
+    if (error instanceof GenericError) {
+      return res.status(error.statusCode).json({
+        message: "Something went wrong",
+        data: {},
+        err: error,
+        success: true,
+      });
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(unknownErrorResponse);
+  }
+}
+
+async function getAllTicketsForAdmin(req: Request, res: Response) {
+  try {
+    const response = await ticketService.getAllTicketsForAdmin();
+    return res.status(200).json({
+      message: "Successfully fetched the tickets",
+      data: response,
+      err: {},
+      success: true,
+    });
+  } catch (error) {
+    if (error instanceof GenericError) {
+      return res.status(error.statusCode).json({
+        message: "Something went wrong",
+        data: {},
+        err: error,
+        success: true,
+      });
+    }
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(unknownErrorResponse);
+  }
+}
+
 export default {
   createTicket,
   updateTicket,
+  getMyAssignedTickets,
+  getMyCreatedTickets,
+  getAllTicketsForAdmin,
 };

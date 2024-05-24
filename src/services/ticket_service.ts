@@ -94,6 +94,39 @@ class TicketService {
       throw error;
     }
   }
+
+  async getMyAssignedTickets(id: string) {
+    try {
+      const response = await this.userRepository.getUserById(id);
+      if (!response) {
+        throw new NotFoundError("User", "id", id);
+      }
+      return response.ticketsAssigned;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getMyCreatedTickets(id: string) {
+    try {
+      const response = await this.userRepository.getUserById(id);
+      return response?.ticketsCreated;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getAllTicketsForAdmin() {
+    try {
+      const response = await this.ticketRepository.getAllTickets();
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 export default TicketService;
