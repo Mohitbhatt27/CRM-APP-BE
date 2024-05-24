@@ -14,6 +14,7 @@ const {
   getMyAssignedTickets,
   getMyCreatedTickets,
   getAllTicketsForAdmin,
+  deleteTicket,
 } = ticketController;
 
 ticketRouter.post("/create", isLoggedIn, createTicket);
@@ -30,5 +31,7 @@ ticketRouter.get(
 ticketRouter.get("/createdTickets", isLoggedIn, getMyCreatedTickets);
 
 ticketRouter.get("/allTickets", isLoggedIn, isAdmin, getAllTicketsForAdmin);
+
+ticketRouter.delete("/delete/:id", isLoggedIn, isEngineerOrAdmin, deleteTicket);
 
 export default ticketRouter;

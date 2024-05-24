@@ -140,6 +140,47 @@ class TicketService {
       throw error;
     }
   }
+
+  async deleteTicket(role: string, email: string, ticketId: string) {
+    try {
+      const ticket = await this.ticketRepository.getTicket(ticketId);
+      if (!ticket) {
+        throw new NotFoundError("Ticket", "id", ticketId);
+      }
+
+      if (role != "ADMIN" && ticket.assignedTo != email) {
+        throw new UnauthorisedError();
+      }
+
+      const response = await this.ticketRepository.deleteTicket(ticketId);
+      // need to remove this ticket from assigned tickets of engineer, and from created tickets of user
+
+      const engineer = await this.userRepository.getUserByEmail(
+        ticket.assignedTo
+      );
+      const user = await this.userRepository.getUserByEmail(ticket.createdBy);
+
+      if (!engineer || !user) {
+        throw new NotFoundError("User", "id", ticket.assignedTo);
+      }
+
+      await this.userRepository.updateUser(engineer.id, {
+        ticketsAssigned: engineer.ticketsAssigned.filter(
+          (ticket) => ticket != ticketId
+        ),
+      });
+      await this.userRepository.updateUser(user.id, {
+        ticketsCreated: user.ticketsCreated.filter(
+          (ticket) => ticket != ticketId
+        ),
+      });
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 export default TicketService;

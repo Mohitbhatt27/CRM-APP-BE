@@ -39,6 +39,15 @@ class UserRepository {
     return response;
   }
 
+  async getUserByEmail(email: string): Promise<User | null> {
+    const response: User | null = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    return response;
+  }
+
   async getAllUsers(): Promise<User[]> {
     const response: User[] = await prisma.user.findMany();
     return response;
