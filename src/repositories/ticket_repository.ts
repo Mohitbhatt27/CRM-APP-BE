@@ -51,6 +51,22 @@ class TicketRepository {
     });
     return response;
   }
+
+  async findManyByIds(ticketIds: string[]) {
+    try {
+      const tickets = await prisma.ticket.findMany({
+        where: {
+          id: {
+            in: ticketIds,
+          },
+        },
+      });
+      return tickets;
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+      throw error;
+    }
+  }
 }
 
 export default TicketRepository;

@@ -101,7 +101,11 @@ class TicketService {
       if (!response) {
         throw new NotFoundError("User", "id", id);
       }
-      return response.ticketsAssigned;
+      const ticketIds = response.ticketsAssigned;
+      const ticketDetails = await this.ticketRepository.findManyByIds(
+        ticketIds
+      );
+      return ticketDetails;
     } catch (error) {
       console.log(error);
       throw error;
@@ -110,8 +114,17 @@ class TicketService {
 
   async getMyCreatedTickets(id: string) {
     try {
-      const response = await this.userRepository.getUserById(id);
-      return response?.ticketsCreated;
+      const user = await this.userRepository.getUserById(id);
+
+      if (!user) {
+        throw new NotFoundError("User", "id", id);
+      }
+
+      const ticketDetails = await this.ticketRepository.findManyByIds(
+        user.ticketsCreated
+      );
+
+      return ticketDetails;
     } catch (error) {
       console.log(error);
       throw error;
