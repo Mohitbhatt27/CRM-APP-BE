@@ -21,16 +21,12 @@ class createTicketDto {
   @IsString()
   createdBy: string;
 
-  @IsString()
-  clientName: string;
-
-  constructor(title: string, description: string, clientName: string) {
+  constructor(title: string, description: string) {
     this.title = title;
     this.description = description;
     this.assignee = "";
     this.assignedTo = "";
     this.createdBy = "";
-    this.clientName = clientName;
   }
 }
 

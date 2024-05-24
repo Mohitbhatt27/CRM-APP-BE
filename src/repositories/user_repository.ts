@@ -11,6 +11,9 @@ class UserRepository {
         name: userDetails.name,
         email: userDetails.email,
         password: userDetails.password,
+        role: "CUSTOMER",
+        ticketsCreated: [],
+        ticketsAssigned: [],
       },
     });
     return response;
@@ -57,6 +60,21 @@ class UserRepository {
     const response: User[] = await prisma.user.findMany({
       where: {
         role: "ENGINEER",
+      },
+    });
+    return response;
+  }
+
+  async updateUser(
+    id: string,
+    updatedData: Partial<User>
+  ): Promise<User | null> {
+    const response: User | null = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updatedData,
       },
     });
     return response;

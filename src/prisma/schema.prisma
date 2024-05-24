@@ -25,7 +25,7 @@ model Ticket {
   status Status @default(OPEN)
   assignee String // email of the user who is assigning the ticket
   assignedTo String // email of the user to whom the ticket is assigned
-  clientName String // company's name
+  clientName String @default("SYSTEM")
   createdBy String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now())

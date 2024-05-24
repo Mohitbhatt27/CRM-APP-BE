@@ -41,6 +41,15 @@ class TicketService {
       const response: Ticket = await this.ticketRepository.createTicket(
         ticketDetails
       );
+
+      await this.userRepository.updateUser(engineer.id, {
+        ticketsAssigned: [...engineer.ticketsAssigned, response.id],
+      });
+
+      await this.userRepository.updateUser(createdBy.id, {
+        ticketsCreated: [...createdBy.ticketsCreated, response.id],
+      });
+
       return response;
     } catch (error) {
       console.log(error);
