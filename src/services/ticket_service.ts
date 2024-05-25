@@ -5,6 +5,7 @@ import UserRepository from "../repositories/user_repository";
 import NotFoundError from "../errors/notFound";
 import UpdateTicketDto from "../dtos/updateTicket_DTO";
 import UnauthorisedError from "../errors/unauthorisedError";
+import ticketMailer from "../mailers/ticket_mailer";
 
 class TicketService {
   ticketRepository: TicketRepository;
@@ -49,6 +50,14 @@ class TicketService {
       await this.userRepository.updateUser(createdBy.id, {
         ticketsCreated: [...createdBy.ticketsCreated, response.id],
       });
+
+      ticketMailer(
+        createdBy.email,
+        response.id,
+        response.title,
+        response.description,
+        createdBy.name
+      );
 
       return response;
     } catch (error) {
