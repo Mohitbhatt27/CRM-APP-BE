@@ -25,7 +25,7 @@ class UserRepository {
         email: userDetails.email,
       },
     });
-
+    console.log(response);
     return response;
   }
 

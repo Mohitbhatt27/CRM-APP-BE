@@ -50,7 +50,7 @@ class UserService {
     }
   }
 
-  async signinUser(userDetails: signinUserDto): Promise<string | null> {
+  async signinUser(userDetails: signinUserDto): Promise<object | null> {
     try {
       const response = await this.userRepository.signinUser(userDetails);
       if (!response) {
@@ -70,8 +70,16 @@ class UserService {
         email: response.email,
         role: response.role,
       });
-
-      return token;
+      const res = {
+        token: token,
+        id: response.id,
+        role: response.role,
+        userData: {
+          id: response.id,
+          name: response.name,
+        },
+      };
+      return res;
     } catch (error) {
       console.log(error);
       throw error;

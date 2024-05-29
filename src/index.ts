@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 import CONFIG from "./config/server_config";
 import apiRouter from "./routes";
 import { isLoggedIn } from "./middlewares/auth_middleware";
-import mailsender from "./config/email_config";
 
 app.use(bodyParser.json());
 app.use(bodyParser.text());
